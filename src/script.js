@@ -1,6 +1,79 @@
 const url = "https://cors-anywhere.herokuapp.com/https://development-internship-api.geopostenergy.com/WorldCup/GetAllTeams";
 
-const teamsContainer = document.getElementById("teams");
+const teamsContainer = document.getElementById("main-content");
+const journeyContainer = document.getElementById("tournament-journey");
+
+const countryTranslations = {
+    "Alemanha": "Germany",
+    "Argélia": "Algeria",
+    "Argentina": "Argentina",
+    "Arábia Saudita": "Saudi Arabia",
+    "Austrália": "Australia",
+    "Áustria": "Austria",
+    "Brasil": "Brazil",
+    "Camarões": "Cameroon",
+    "Canadá": "Canada",
+    "Chile": "Chile",
+    "Colômbia": "Colombia",
+    "Coreia do Sul": "South Korea",
+    "Coreia do Norte": "North Korea",
+    "Costa do Marfim": "Ivory Coast",
+    "Costa Rica": "Costa Rica",
+    "Croácia": "Croatia",
+    "Dinamarca": "Denmark",
+    "Equador": "Ecuador",
+    "Escócia": "Scotland",
+    "Espanha": "Spain",
+    "Estados Unidos": "United States",
+    "França": "France",
+    "Gana": "Ghana",
+    "Holanda": "Netherlands",
+    "Hungria": "Hungary",
+    "Indonésia": "Indonesia",
+    "Inglaterra": "England",
+    "Irã": "Iran",
+    "Jamaica": "Jamaica",
+    "Japão": "Japan",
+    "Jordânia": "Jordan",
+    "Marrocos": "Morocco",
+    "México": "Mexico",
+    "Nigéria": "Nigeria",
+    "Nova Zelândia": "New Zealand",
+    "Panamá": "Panama",
+    "Portugal": "Portugal",
+    "Sérvia": "Serbia",
+    "Suíça": "Switzerland",
+    "Tunísia": "Tunisia",
+    "Turquia": "Turkey",
+    "Uruguai": "Uruguay",
+    "Uzbequistão": "Uzbekistan",
+    "Venezuela": "Venezuela"
+};
+
+function translateCountry(name) {
+    return countryTranslations[name] || name;
+}
+
+function createJourneyCard(stageName, match) {
+    const card = document.createElement("div");
+    card.classList.add("journey-card");
+
+    const stage = document.createElement("h3");
+    stage.textContent = stageName;
+    card.appendChild(stage);
+
+    const result = document.createElement("p");
+
+    if (match.goalsTeam1 === match.goalsTeam2) {
+        result.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)} (${match.penaltyTeam1} x ${match.penaltyTeam2} pen)`;
+    } else {
+        result.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)}`;
+    }
+
+    card.appendChild(result);
+
+    journeyContainer.appendChild(card);
+}
 
 fetch(url, {
     headers: {
@@ -47,7 +120,7 @@ fetch(url, {
 
             groups[group].forEach(team => {
                 const p = document.createElement("p");
-                p.textContent = team.nome;
+                p.textContent = translateCountry(team.nome);
                 groupSection.appendChild(p);
             });
 
@@ -176,7 +249,7 @@ fetch(url, {
 
             groupStageData[group].matchResults.forEach(match => {
                 const p = document.createElement("p");
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome}`;
+               p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)}`;
                 groupStageSection.appendChild(p);
             });
 
@@ -186,7 +259,7 @@ fetch(url, {
 
             groupStageData[group].sortedStandings.forEach((team, index) => {
                 const p = document.createElement("p");
-                p.textContent = `${index + 1}. ${team.team.nome} - ${team.points} pts | GD: ${team.goalDifference} | GF: ${team.goalsFor} | GA: ${team.goalsAgainst}`;
+                p.textContent = `${index + 1}. ${translateCountry(team.team.nome)} - ${team.points} pts | GD: ${team.goalDifference} | GF: ${team.goalsFor} | GA: ${team.goalsAgainst}`;
                 groupStageSection.appendChild(p);
             });
 
@@ -196,7 +269,7 @@ fetch(url, {
 
             groupStageData[group].qualifiedTeams.forEach(team => {
                 const p = document.createElement("p");
-                p.textContent = team.team.nome;
+                p.textContent = translateCountry(team.team.nome);
                 groupStageSection.appendChild(p);
             });
         }
@@ -254,6 +327,10 @@ fetch(url, {
 
         //console.log("Round of 16 Results:", roundOf16Results);
 
+        roundOf16Results.forEach(match => {
+            createJourneyCard("Round of 16", match);
+        });
+
         const knockoutTitle = document.createElement("h1");
         knockoutTitle.textContent = "Knockout Stage";
         teamsContainer.appendChild(knockoutTitle);
@@ -270,9 +347,9 @@ fetch(url, {
             const p = document.createElement("p");
 
             if (match.goalsTeam1 === match.goalsTeam2) {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
             } else {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome}`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)}`;
             }
 
             roundOf16Section.appendChild(p);
@@ -339,12 +416,16 @@ fetch(url, {
             const p = document.createElement("p");
 
             if (match.goalsTeam1 === match.goalsTeam2) {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
             } else {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome}`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)}`;
             }
 
             quarterfinalSection.appendChild(p);
+        });
+
+        quarterfinalResults.forEach(match => {
+            createJourneyCard("Quarterfinals", match);
         });
 
         const semifinals = [
@@ -416,12 +497,16 @@ fetch(url, {
             const p = document.createElement("p");
 
             if (match.goalsTeam1 === match.goalsTeam2) {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
             } else {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome}`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)}`;
             }
 
             semifinalSection.appendChild(p);
+        });
+
+        semifinalResults.forEach(match => {
+            createJourneyCard("Semifinals", match);
         });
 
 
@@ -481,16 +566,20 @@ fetch(url, {
             const p = document.createElement("p");
 
             if (match.goalsTeam1 === match.goalsTeam2) {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
             } else {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome}`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)}`;
             }
 
             thirdPlaceSection.appendChild(p);
 
             const winner = document.createElement("p");
-            winner.textContent = `Third Place: ${match.winner.nome}`;
+            winner.textContent = `Third Place: ${translateCountry(match.winner.nome)}`;
             thirdPlaceSection.appendChild(winner);
+        });
+
+        thirdPlaceResults.forEach(match => {
+            createJourneyCard("Third Place", match);
         });
 
 
@@ -538,6 +627,29 @@ fetch(url, {
 
         //console.log("Final Results:", finalResults);
 
+
+           const champion = finalResults[0].winner;
+
+
+        finalResults.forEach(match => {
+            createJourneyCard("Final", match);
+        });
+
+        const championCard = document.createElement("div");
+        championCard.classList.add("journey-card", "champion-card");
+
+        const championTitle = document.createElement("h3");
+        championTitle.textContent = "Champion";
+        championCard.appendChild(championTitle);
+
+        const championText = document.createElement("p");
+       championText.textContent = translateCountry(champion.nome);
+        championCard.appendChild(championText);
+
+        journeyContainer.appendChild(championCard);
+
+
+
         const finalSection = document.createElement("div");
         finalSection.classList.add("knockout-section");
         teamsContainer.appendChild(finalSection);
@@ -550,19 +662,18 @@ fetch(url, {
             const p = document.createElement("p");
 
             if (match.goalsTeam1 === match.goalsTeam2) {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)} (Penalties: ${match.penaltyTeam1} x ${match.penaltyTeam2})`;
             } else {
-                p.textContent = `${match.team1.nome} ${match.goalsTeam1} x ${match.goalsTeam2} ${match.team2.nome}`;
+                p.textContent = `${translateCountry(match.team1.nome)} ${match.goalsTeam1} x ${match.goalsTeam2} ${translateCountry(match.team2.nome)}`;
             }
 
             finalSection.appendChild(p);
 
             const championText = document.createElement("p");
-            championText.textContent = `Champion: ${match.winner.nome}`;
+            championText.textContent = `Champion: ${translateCountry(match.winner.nome)}`;
             finalSection.appendChild(championText);
         });
 
-        const champion = finalResults[0].winner;
         //console.log("Champion:", champion.nome);
 
 
