@@ -1,23 +1,50 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Cup 2026</title>
     <link rel="stylesheet" href="./src/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=League+Spartan:wght@700&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Overlock:wght@700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <header class="page-header">
-        <h1>World Cup 2026</h1>
-        <p>USA • Canada • Mexico</p>
+        <img src="./src/world-cup.png" alt="World Cup Logo">
+        <div>
+            <h1>World Cup <span>2026</span></h1>
+            <p>
+                <span class="usa">USA</span> •
+                <span class="canada">Canada</span> •
+                <span class="mexico">Mexico</span>
+            </p>
+            <button id="simulate-btn">Simulate Journey</button>
+        </div>
     </header>
 
     <main class="layout">
         <section class="main-content" id="main-content"></section>
         <aside class="sidebar" id="tournament-journey">
-            <h2>Tournament Journey</h2>
+            <h2><ion-icon name="git-branch-outline"></ion-icon> Tournament Journey</h2>
         </aside>
     </main>
 
+    <footer class="page-footer">
+        <p>World Cup 2026 • USA • Canada • Mexico</p>
+    </footer>
+
     <script src="./src/script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
+
 </html>
